@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+#anh{
+	height: 90px;
+	width: 70px;
+}
+
+#thumbnail{
+	height: 300px;
+
+}
+.mypadding{
+  width: 600px;
+}
