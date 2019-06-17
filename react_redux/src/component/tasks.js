@@ -91,7 +91,7 @@ export default class TaskManagement extends Component {
         }else{            
             //var index=this.findIndex(data.id);
             var index = _.findIndex(tasks, (task)=> {
-                return task.id == data.id;
+                return task.id === data.id;
             });
             tasks[index]= data;
         }
@@ -117,7 +117,7 @@ export default class TaskManagement extends Component {
         //var index= this.findIndex(id);
        
         var index = _.findIndex(tasks,(task) => {
-             return task.id == id ; 
+             return task.id === id ; 
             });
         if(index!==-1){
             tasks[index].status=!tasks[index].status;
@@ -143,7 +143,7 @@ export default class TaskManagement extends Component {
         var {tasks} = this.state;
         //var index= this.findIndex(id);
         var index = _.findIndex(tasks, (task)=> {
-             return task.id == id;
+             return task.id === id;
         });
 
         if(index!==-1){
@@ -160,7 +160,7 @@ export default class TaskManagement extends Component {
         var {tasks} = this.state;
         //var index= this.findIndex(id);
         var index = _.findIndex(tasks, (task)=> {
-            return task.id == id;
+            return task.id === id;
         });
         var taskEditting= tasks[index];
          
