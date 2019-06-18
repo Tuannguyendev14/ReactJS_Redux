@@ -4,11 +4,22 @@ import './index.css';
 import './footer.css';
 import App from './App';
 import Clock from './Clock';
- 
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App/>, document.getElementById('content'));
+//import thu vien cua redux 
+import {createStore} from 'redux';
+import myReducer from './reducers/index';
+import { Provider } from 'react-redux';
+const store = createStore(myReducer);
 
-ReactDOM.render(<Clock />,document.getElementById('clock'));
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App/>
+    </Provider> ,
+    document.getElementById('content')
+);
+
+ 
  
 serviceWorker.unregister();

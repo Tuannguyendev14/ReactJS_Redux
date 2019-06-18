@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import TaskItem from './taskitem';
- 
 
-export default class TaskList extends Component {
+import {connect} from 'react-redux';
+
+class TaskList extends Component {
 
     // Filter data from form
     constructor(props){
@@ -28,12 +29,14 @@ export default class TaskList extends Component {
     }
 
     render() {
+        console.log(this.props.tasks);
+        //redux
         var {tasks} = this.props ;
         var {filterName, filterStatus} = this.state;
         var elmTasks = tasks.map((task,index)=> {
             return   <TaskItem key={task.id}
                              index={index}
-                             task={task}
+                             task ={task}
                              onUpdateStatus={this.props.onUpdateStatus}
                              onDelete={this.props.onDelete}
                              onUpdate={this.props.onUpdate}
@@ -75,6 +78,12 @@ export default class TaskList extends Component {
             </div>
         );
     }
-
-
 }
+
+const mapStateToProps = (state) => {
+    return {
+        tasks : state.tasks
+    }
+}
+
+export default connect (mapStateToProps,null)(TaskList);

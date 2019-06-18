@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
- 
+
+import {connect} from 'react-redux';
+import * as actions from './../actions/index'; 
 
 
-export default class TaskForm extends Component {
+ class TaskForm extends Component {
     onCloseForm =()=>{
         this.props.onCloseForm()
     }
@@ -29,6 +31,7 @@ export default class TaskForm extends Component {
 
     onSubmit=(event)=>{
         event.preventDefault();
+        //this.props.onSubmit(this.state);
         this.props.onSubmit(this.state);
         // Close form and clear form
         this.onClear();
@@ -72,12 +75,13 @@ export default class TaskForm extends Component {
 
 
     render() {
-        var {id} = this.state;
+        // var {id} = this.state;
         return ( 
             <div className="panel panel-danger">
                 <div className="panel-heading">
                     <p className="text-center">
-                    { id ==="" ? 'Add tasks' : ' Update tasks '}
+                    {/* { id ==="" ? 'Add tasks' : ' Update tasks '} */}
+                    Add task
                     <span className="glyphicon glyphicon-remove text-right"
                     onClick={this.onCloseForm}></span>
                     </p> 
@@ -107,3 +111,17 @@ export default class TaskForm extends Component {
 
 
 }
+
+const mapStateToProps = (state) => {
+    return {
+        
+    };
+}; 
+const mapDispatchToProps = (dispatch, props)=>{
+    return {
+        onSubmit : (task) => {
+            dispatch(actions.addTask(task));
+        }
+    };
+};
+export default connect(mapStateToProps,mapDispatchToProps)(TaskForm);

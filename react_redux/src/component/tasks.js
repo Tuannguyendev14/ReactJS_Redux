@@ -4,15 +4,19 @@ import TaskForm from './taskform';
 import Control from './control'; 
 import TaskList from './tasklist';
 import _ from 'lodash';
+ 
 
-export default class TaskManagement extends Component {
+import {connect} from 'react-redux';
+import * as actions from './actions/index';
+
+ class TaskManagement extends Component {
      
 
     constructor(props){
         super(props);
         this.state={
-            tasks:[] ,// id, name, status
-            isDisplayform:false,
+            //tasks:[] , id, name, status
+            //isDisplayform:false,
             taskEditting: null,
             filter : {
                 name:'',
@@ -23,93 +27,88 @@ export default class TaskManagement extends Component {
             sortValue:1
         }
     }
-    onGenerateData =()=>{
-        var tasks = [
-            {
-                id: this.generateID(),
-                name:'Read documents about React Life Circle',
-                status: false
-            },
-            {
-                id: this.generateID(),
-                name:'Write test case',
-                status: true
-            }
-        ];
-        this.setState({
-            tasks:tasks
-        });
+    // onGenerateData =()=>{
+    //     var tasks = [
+    //         {
+    //             id: this.generateID(),
+    //             name:'Read documents about React Life Circle',
+    //             status: false
+    //         },
+    //         {
+    //             id: this.generateID(),
+    //             name:'Write test case',
+    //             status: true
+    //         }
+    //     ];
+    //     this.setState({
+    //         tasks:tasks
+    //     });
 
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-    } 
+    //     localStorage.setItem('tasks', JSON.stringify(tasks));
+    // } 
 
-    componentWillMount(){
-        if(localStorage && localStorage.getItem ('tasks')){
-            var tasks = JSON.parse(localStorage.getItem('tasks'));
-            this.setState({
-                tasks: tasks
-            });
-        }
-    }
+    // componentWillMount(){
+    //     if(localStorage && localStorage.getItem ('tasks')){
+    //         var tasks = JSON.parse(localStorage.getItem('tasks'));
+    //         this.setState({
+    //             tasks: tasks
+    //         });
+    //     }
+    // }
 
     // Dong mo form , xet gia tri nguoc lai
     onToggleForm=() =>{
-        if(this.state.isDisplayform && this.state.taskEditting!== null){
-            this.setState({
-                isDisplayform: true,
-                taskEditting : null
-            });
-        }else{
-            this.setState({
-                isDisplayform: !this.state.isDisplayform,
-                taskEditting : null
-            });
-        }
+        // if(this.state.isDisplayform && this.state.taskEditting!== null){
+        //     this.setState({
+        //         isDisplayform: true,
+        //         taskEditting : null
+        //     });
+        // }else{
+        //     this.setState({
+        //         isDisplayform: !this.state.isDisplayform,
+        //         taskEditting : null
+        //     });
+        // }
+        this.props.onToggleForm(this.state);
     }
 
     // Dong form
-    onCloseForm=()=>{
-        this.setState({
-            isDisplayform: false
-        });
-    }
+    // onCloseForm=()=>{
+    //     this.setState({
+    //         isDisplayform: false
+    //     });
+    // }
 
     // Open form
-    onShowForm=()=>{
-        this.setState({
-            isDisplayform: true
-        });
-    }
+    // onShowForm=()=>{
+    //     this.setState({
+    //         isDisplayform: true
+    //     });
+    // }
 
-    onSubmit=(data)=>{
-        var {tasks} = this.state;
+    // onSubmit=(data)=>{
+    //     var {tasks} = this.state.tasks;
+    //     data.status= data.status ===  'true' ? true:false;
 
-        if(data.id ===""){
-            data.id =  this.generateID();
-            console.log(data.id);
-            tasks.push(data);            
-        }else{            
-            //var index=this.findIndex(data.id);
-            var index = _.findIndex(tasks, (task)=> {
-                return task.id === data.id;
-            });
-            tasks[index]= data;
-        }
+    //     if(data.id ===''){
+    //         data.id =  this.generateID();
+    //         tasks.push(data);            
+    //     }else{            
+    //         //var index=this.findIndex(data.id);
+    //         var index = _.findIndex(tasks, (task)=> {
+    //             return task.id === data.id;
+    //         });
+    //         tasks[index]= data;
+    //     }
 
-        this.setState({
-            tasks:tasks,
+    //     this.setState({
+    //         tasks:tasks,
             
-        });  
-        localStorage.setItem('tasks', JSON.stringify(tasks));       
-    } 
+    //     });  
+    //     localStorage.setItem('tasks', JSON.stringify(tasks));       
+    // } 
 
-    s4(){
-        return Math.floor((1+Math.random()) * 0x10000).toString(16).substring(1);
-    }
-
-    generateID(){
-        return this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4() +'-' + this.s4() +'-' + this.s4() + this.s4() + this.s4() ;
-    }
+    
  
     onUpdateStatus=(id)=>{
         var {tasks} = this.state;
@@ -139,109 +138,113 @@ export default class TaskManagement extends Component {
     //     return result;
     // }
 
-    onDelete=(id)=>{
-        var {tasks} = this.state;
-        //var index= this.findIndex(id);
-        var index = _.findIndex(tasks, (task)=> {
-             return task.id === id;
-        });
+    // onDelete=(id)=>{
+    //     var {tasks} = this.state;
+    //     //var index= this.findIndex(id);
+    //     var index = _.findIndex(tasks, (task)=> {
+    //          return task.id === id;
+    //     });
 
-        if(index!==-1){
-            tasks.splice(index,1);
-            this.setState({
-                tasks:tasks
-            });
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-        this.onCloseForm();
-    }
+    //     if(index!==-1){
+    //         tasks.splice(index,1);
+    //         this.setState({
+    //             tasks:tasks
+    //         });
+    //         localStorage.setItem('tasks', JSON.stringify(tasks));
+    //     }
+    //     this.onCloseForm();
+    // }
 
-    onUpdate=(id)=>{
-        var {tasks} = this.state;
-        //var index= this.findIndex(id);
-        var index = _.findIndex(tasks, (task)=> {
-            return task.id === id;
-        });
-        var taskEditting= tasks[index];
+    // onUpdate=(id)=>{
+    //     var {tasks} = this.state;
+    //     //var index= this.findIndex(id);
+    //     var index = _.findIndex(tasks, (task)=> {
+    //         return task.id === id;
+    //     });
+    //     var taskEditting= tasks[index];
          
-        this.setState({
-            taskEditting: taskEditting
-        });
-        this.onShowForm();
+    //     this.setState({
+    //         taskEditting: taskEditting
+    //     });
+    //     this.onShowForm();
                 
             
-    }
+    // }
 
-    onFilter=(filterName, filterStatus)=>{
-        filterStatus=parseInt(filterStatus,10);
-        this.setState({
-            filter:{
-                name:filterName.toLowerCase(),
-                status:filterStatus
-            }
-        })
-    }
+    // onFilter=(filterName, filterStatus)=>{
+    //     filterStatus=parseInt(filterStatus,10);
+    //     this.setState({
+    //         filter:{
+    //             name:filterName.toLowerCase(),
+    //             status:filterStatus
+    //         }
+    //     })
+    // }
 
-    onSearch=(keyword)=>{
-       this.setState({
-           keyword: keyword
-       });
-    }
+    // onSearch=(keyword)=>{
+    //    this.setState({
+    //        keyword: keyword
+    //    });
+    // }
 
-    onSort=(sortBy, sortValue)=>{
-        console.log(sortBy, sortValue);
-        this.setState({
-            sortBy: sortBy,
-            sortValue:sortValue
-        });
-    }
+    // onSort=(sortBy, sortValue)=>{
+    //     console.log(sortBy, sortValue);
+    //     this.setState({
+    //         sortBy: sortBy,
+    //         sortValue:sortValue
+    //     });
+    // }
 
     render() {
-        var { tasks, isDisplayform, taskEditting, filter,keyword, sortBy, sortValue } = this.state; // var tasks = this.state.tasks
-        if(filter){
-            if(filter.name){
-                tasks = tasks.filter((task) => {
-                    return task.name.toLowerCase().indexOf(filter.name)!== -1;
-                });
-            }
-            tasks = tasks.filter((task) => {
-                if(filter.status=== -1){
-                   return task;
-                }else{
-                    return task.status === (filter.status=== 1 ? true :false);
-                }
-            });
-        }
+        var {   //isDisplayform, 
+            taskEditting, 
+            filter,
+            //keyword, 
+            sortBy, 
+            sortValue } = this.state;  
+        // if(filter){
+        //     if(filter.name){
+        //         tasks = tasks.filter((task) => {
+        //             return task.name.toLowerCase().indexOf(filter.name)!== -1;
+        //         });
+        //     }
+        //     tasks = tasks.filter((task) => {
+        //         if(filter.status=== -1){
+        //            return task;
+        //         }else{
+        //             return task.status === (filter.status=== 1 ? true :false);
+        //         }
+        //     });
+        // }
 
-        if(keyword){
-            // tasks = tasks.filter((task) => {
-            //     return task.name.toLowerCase().indexOf(keyword)!== -1;
-            // });
+        // if(keyword){
+             
 
-            tasks = _.filter(tasks, (task) =>{
-                return task.name.toLowerCase().indexOf(keyword)!== -1; 
-            });
-        }
+        //     tasks = _.filter(tasks, (task) =>{
+        //         return task.name.toLowerCase().indexOf(keyword)!== -1; 
+        //     });
+        // }
 
-        if(sortBy==="name"){
-            tasks.sort((a,b)=>{
-                if(a.name > b.name) return sortValue;
-                if(a.name < b.name ) return -sortValue;
-                else return 0;
-            });
-        }else{
-            tasks.sort((a,b)=>{
-                if(a.status > b.status) return -sortValue;
-                if(a.status < b.status ) return sortValue;
-                else return 0;
-            });
-        }
+        // if(sortBy==="name"){
+        //     tasks.sort((a,b)=>{
+        //         if(a.name > b.name) return sortValue;
+        //         if(a.name < b.name ) return -sortValue;
+        //         else return 0;
+        //     });
+        // }else{
+        //     tasks.sort((a,b)=>{
+        //         if(a.status > b.status) return -sortValue;
+        //         if(a.status < b.status ) return sortValue;
+        //         else return 0;
+        //     });
+        // }
 
         var elmTaskForm = isDisplayform ? <TaskForm onSubmit={this.onSubmit} 
                                                     onCloseForm={this.onCloseForm}
                                                     task={taskEditting}
                                           /> : '';
 
+        var {isDisplayform} =   this.props ;
 
         return ( 
             <div className = "container"> 
@@ -272,7 +275,7 @@ export default class TaskManagement extends Component {
                             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 {/*List task and filter data (name and status )*/}
                                 <TaskList  
-                                    tasks={tasks}
+                                     
                                     onUpdateStatus={this.onUpdateStatus}
                                     onDelete={this.onDelete}
                                     onUpdate={this.onUpdate}
@@ -292,3 +295,19 @@ export default class TaskManagement extends Component {
 
 
 }
+
+const mapStateToProps = (state) => {
+    return {
+        isDisplayform : state.isDisplayform;
+    };
+};
+
+const mapDispatchToProps = (state) => {
+    return {
+        onToggleForm : ()=>{
+            dispatch(actions.toggleForm());
+        }
+    };
+} ;
+
+export default  connect(mapStateToProps,mapDispatchToProps) (TaskManagement);
