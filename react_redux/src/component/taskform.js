@@ -5,8 +5,8 @@ import * as actions from './../actions/index';
 
 
  class TaskForm extends Component {
-    onCloseForm =()=>{
-        this.props.onCloseForm()
+    closeForm =()=>{
+        this.props.closeForm(this.state);
     }
 
     constructor(props){
@@ -20,10 +20,8 @@ import * as actions from './../actions/index';
     onChange=(event)=>{
         var target = event.target;
         var name = target.name;
-        var value = target.value;
-        if(name==="status"){
-            value=target.value ==="true"? true: false;
-        }
+        var value = target.type==='checkbox' ? target.checked : target.value ;
+         
         this.setState({
             [name] : value
         });
@@ -31,45 +29,43 @@ import * as actions from './../actions/index';
 
     onSubmit=(event)=>{
         event.preventDefault();
-        //this.props.onSubmit(this.state);
         this.props.onSubmit(this.state);
-        // Close form and clear form
+        
         this.onClear();
-        this.onCloseForm();
+        this.closeForm();
     }
 
     onClear=()=>{
         this.setState({
+            id:'', 
             name:'',
             status:false
         });
     }
 
     componentWillMount(){
-        if(this.props.task){
+        if(this.props.edit && this.props.edit.id !== null){
             this.setState({
-                id: this.props.task.id,
-                name: this.props.task.name,
-                status :this.props.task.status
+                id: this.props.edit.id,
+                name: this.props.edit.name,
+                status :this.props.edit.status
             });
 
+        }else{
+            this.onClear();
         }
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps && nextProps.task){
+        if(nextProps && nextProps.edit){
             this.setState({
-                id: nextProps.task.id,
-                name: nextProps.task.name,
-                status : nextProps.task.status
+                id: nextProps.edit.id,
+                name: nextProps.edit.name,
+                status : nextProps.edit.status
             });
 
-        }else if(!nextProps.task){
-            this.setState({
-                id: '',
-                name: '',
-                status : false
-            });
+        }else  {
+            this.onClear();
         }
     }
 
@@ -83,7 +79,7 @@ import * as actions from './../actions/index';
                     {/* { id ==="" ? 'Add tasks' : ' Update tasks '} */}
                     Add task
                     <span className="glyphicon glyphicon-remove text-right"
-                    onClick={this.onCloseForm}></span>
+                    onClick={this.closeForm}></span>
                     </p> 
                 </div> 
                 <div className="panel-body">
@@ -114,13 +110,17 @@ import * as actions from './../actions/index';
 
 const mapStateToProps = (state) => {
     return {
-        
+        isDisplayform : state.isDisplayForm,
+        edit : state.edit
     };
 }; 
 const mapDispatchToProps = (dispatch, props)=>{
     return {
         onSubmit : (task) => {
             dispatch(actions.addTask(task));
+        },
+        closeForm : () => {
+            dispatch(actions.closeForm());
         }
     };
 };

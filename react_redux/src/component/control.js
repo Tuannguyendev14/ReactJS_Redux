@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import * as actions from './../actions/index';
+import {connect} from 'react-redux';
  
-
-
-export default class Control extends Component {
+class Control extends Component {
 
     constructor(props){
         super(props);
@@ -25,16 +25,15 @@ export default class Control extends Component {
     }
 
     onClick=(sortBy, sortValue)=>{
-        this.props.onSort(sortBy, sortValue);
+        this.props.onSort({
+            by: sortBy,
+            value : sortValue
+        });
     }
-
-    componentWillReceiveProps(nextProps){
-        console.log(nextProps);
-    }
-
+ 
     render() {
-
         var {keyword,sort}= this.state;
+
         return ( 
            <div>
                 <div className="row mt-15">
@@ -51,7 +50,6 @@ export default class Control extends Component {
                         </div>
                     </div>
 
-                    
                     <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <div className="dropdown">
                             <button className="btn btn-primary dropdown -toggle" type="button" id="dropdownmenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -86,6 +84,20 @@ export default class Control extends Component {
            </div>
         );
     }
-
-
 }
+const mapStateToProps = (state) => {
+    return {sort  : state.sort };
+};  
+
+const mapDispatchToProps = (dispatch,props) => {
+    return {
+        onSearch : (keyword)=>{
+            dispatch(actions.searchTask(keyword));
+        },
+        onSort : (sort)=>{
+            dispatch(actions.sortTask(sort));
+        }  
+    };
+} ;
+
+export default  connect(mapStateToProps,mapDispatchToProps) (Control); 

@@ -10,9 +10,11 @@ var myReducer = (state = initialState, action )=>{
         case types.TOOGLE_FORM:
             return !state;
         case types.CLOSE_FORM:
-            return false;
+            state  = false;
+            return state;
         case types.OPEN_FORM:
-            return true;
+            state = true;
+            return state;
          default :return state;
     }
    

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import './footer.css';
 import App from './App';
-import Clock from './Clock';
+ 
 import * as serviceWorker from './serviceWorker';
 
 //import thu vien cua redux 
